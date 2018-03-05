@@ -1,35 +1,48 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Apexftdata</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+      <h1>Stock Records</h1> 
+    </div>
+    <div class="col-6" style="text-align: right;">
+      <button type="button" class="btn btn-elegant">
+        <%= link_to 'Add New Record', new_apexftdatum_path %>
+      </button>
+    </div>
+  </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Stockprice</th>
-      <th>Strikeprice</th>
-      <th>Timetomaturity</th>
-      <th>Interest</th>
-      <th>Volatility</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+  <!--Table-->
+  <table class="table">
+    <!--Table head-->
+    <thead>
+        <tr>
+          <th>Stock Price</th>
+          <th>Strike Price</th>
+          <th>Time To Maturity</th>
+          <th>Interest Rate</th>
+          <th>Volatility</th>
+          <th colspan="3">Actions</th>
+        </tr>
+    </thead>
+    <!--Table head-->
 
-  <tbody>
-    <% @apexftdata.each do |apexftdatum| %>
-      <tr>
-        <td><%= apexftdatum.stockprice %></td>
-        <td><%= apexftdatum.strikeprice %></td>
-        <td><%= apexftdatum.timetomaturity %></td>
-        <td><%= apexftdatum.interest %></td>
-        <td><%= apexftdatum.volatility %></td>
-        <td><%= link_to 'Show', apexftdatum %></td>
-        <td><%= link_to 'Edit', edit_apexftdatum_path(apexftdatum) %></td>
-        <td><%= link_to 'Destroy', apexftdatum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Apexftdatum', new_apexftdatum_path %>
+    <!--Table body-->
+    <tbody>
+      <% @apexftdata.each do |apexftdatum| %>
+        <tr>
+          <td><%= apexftdatum.stockprice %></td>
+          <td><%= apexftdatum.strikeprice %></td>
+          <td><%= apexftdatum.timetomaturity %></td>
+          <td><%= apexftdatum.interest %></td>
+          <td><%= apexftdatum.volatility %></td>
+          <td><%= link_to 'Show', apexftdatum %></td>
+          <td><%= link_to 'Edit', edit_apexftdatum_path(apexftdatum) %></td>
+          <td><%= link_to 'Destroy', apexftdatum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+    <!--Table body-->
+  </table>
+  <!--Table-->
+</div>

@@ -1,29 +1,30 @@
 <p id="notice"><%= notice %></p>
+<h2>Stock Details :</h2>
+<div style="margin-left: 2rem;">
+  <div class="row">
+    <h6>Stock Price :&nbsp; <%= @apexftdatum.stockprice %></h6>
+  </div>
 
-<p>
-  <strong>Stockprice:</strong>
-  <%= @apexftdatum.stockprice %>
-</p>
+  <div class="row">
+    <h6>Strike Price :&nbsp; <%= @apexftdatum.strikeprice %></h6>
+  </div>
 
-<p>
-  <strong>Strikeprice:</strong>
-  <%= @apexftdatum.strikeprice %>
-</p>
+  <div class="row">
+    <h6>Time To Maturity :&nbsp; <%= @apexftdatum.timetomaturity %></h6>
+  </div>
 
-<p>
-  <strong>Timetomaturity:</strong>
-  <%= @apexftdatum.timetomaturity %>
-</p>
+  <div class="row">
+    <h6>Interest Rate :&nbsp; <%= @apexftdatum.interest %></h6>
+  </div>
 
-<p>
-  <strong>Interest:</strong>
-  <%= @apexftdatum.interest %>
-</p>
+  <div class="row">
+    <h6>Volatility :&nbsp; <%= @apexftdatum.volatility %></h6>
+  </div>
+</div>
 
-<p>
-  <strong>Volatility:</strong>
-  <%= @apexftdatum.volatility %>
-</p>
-
-<%= link_to 'Edit', edit_apexftdatum_path(@apexftdatum) %> |
-<%= link_to 'Back', apexftdata_path %>
+<button type="button" class="btn btn-elegant">
+  <%= link_to 'Edit', edit_apexftdatum_path(@apexftdatum) %>
+</button>
+<button type="button" class="btn btn-elegant">
+  <%= link_to 'Back', apexftdata_path %>
+</button>
