@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Stockprice:</strong>
+  <%= @apexftdatum.stockprice %>
+</p>
+
+<p>
+  <strong>Strikeprice:</strong>
+  <%= @apexftdatum.strikeprice %>
+</p>
+
+<p>
+  <strong>Timetomaturity:</strong>
+  <%= @apexftdatum.timetomaturity %>
+</p>
+
+<p>
+  <strong>Interest:</strong>
+  <%= @apexftdatum.interest %>
+</p>
+
+<p>
+  <strong>Volatility:</strong>
+  <%= @apexftdatum.volatility %>
+</p>
+
+<%= link_to 'Edit', edit_apexftdatum_path(@apexftdatum) %> |
+<%= link_to 'Back', apexftdata_path %>

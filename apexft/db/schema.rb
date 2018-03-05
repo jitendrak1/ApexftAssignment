@@ -10,6 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20180305185158) do
+
+  create_table "apexftdata", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.decimal "stockprice", precision: 10
+    t.decimal "strikeprice", precision: 10
+    t.decimal "timetomaturity", precision: 10
+    t.decimal "interest", precision: 10
+    t.decimal "volatility", precision: 10
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
 end

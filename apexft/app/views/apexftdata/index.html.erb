@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Apexftdata</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Stockprice</th>
+      <th>Strikeprice</th>
+      <th>Timetomaturity</th>
+      <th>Interest</th>
+      <th>Volatility</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @apexftdata.each do |apexftdatum| %>
+      <tr>
+        <td><%= apexftdatum.stockprice %></td>
+        <td><%= apexftdatum.strikeprice %></td>
+        <td><%= apexftdatum.timetomaturity %></td>
+        <td><%= apexftdatum.interest %></td>
+        <td><%= apexftdatum.volatility %></td>
+        <td><%= link_to 'Show', apexftdatum %></td>
+        <td><%= link_to 'Edit', edit_apexftdatum_path(apexftdatum) %></td>
+        <td><%= link_to 'Destroy', apexftdatum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Apexftdatum', new_apexftdatum_path %>

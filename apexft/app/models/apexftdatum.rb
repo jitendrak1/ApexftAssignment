@@ -1,0 +1,2 @@
+class Apexftdatum < ApplicationRecord
+end

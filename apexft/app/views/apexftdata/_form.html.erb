@@ -1,0 +1,42 @@
+<%= form_with(model: apexftdatum, local: true) do |form| %>
+  <% if apexftdatum.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(apexftdatum.errors.count, "error") %> prohibited this apexftdatum from being saved:</h2>
+
+      <ul>
+      <% apexftdatum.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :stockprice %>
+    <%= form.text_field :stockprice, id: :apexftdatum_stockprice %>
+  </div>
+
+  <div class="field">
+    <%= form.label :strikeprice %>
+    <%= form.text_field :strikeprice, id: :apexftdatum_strikeprice %>
+  </div>
+
+  <div class="field">
+    <%= form.label :timetomaturity %>
+    <%= form.text_field :timetomaturity, id: :apexftdatum_timetomaturity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :interest %>
+    <%= form.text_field :interest, id: :apexftdatum_interest %>
+  </div>
+
+  <div class="field">
+    <%= form.label :volatility %>
+    <%= form.text_field :volatility, id: :apexftdatum_volatility %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

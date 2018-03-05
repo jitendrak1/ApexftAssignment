@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  stockprice: 9.99
+  strikeprice: 9.99
+  timetomaturity: 9.99
+  interest: 9.99
+  volatility: 9.99
+
+two:
+  stockprice: 9.99
+  strikeprice: 9.99
+  timetomaturity: 9.99
+  interest: 9.99
+  volatility: 9.99
