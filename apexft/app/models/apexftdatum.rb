@@ -2,55 +2,10 @@ class Apexftdatum < ApplicationRecord
 	validates :stockprice, :strikeprice, :timetomaturity, :interest, :volatility, :presence => true
 	validates :stockprice, :strikeprice, :timetomaturity, :interest, :volatility, :numericality => true
 
-	# take input from user and calculate call price
-	def self.calculateCallPrice(call_price_params)
-		stockprice = params[:stockprice].to_f;
-		strikeprice = params[:strikeprice].to_f;
-		timetomaturity = params[:timetomaturity] / 252.0;
-		interestrate = params[:interest] / 100.0;
-		volatility = params[:volatility] / 100.0;
-
-		# calculate d1 and d2.
-		d1 = ( Math::log(stockprice/strikeprice) + (interestrate + (volatility ** 2) / 2.0) * timetomaturity) / (volatility * Math.sqrt(timetomaturity));
-		d2 = d1 - (volatility * Math.sqrt(timetomaturity));
-
-		# take value from d1 and d2 based on z-index table
-		# example : d1 = 1.23 then d1vz1 = 1.2 and d1vz2 = 0.03
-		d1vz1 = ("%0.1f" % d1).to_s;
-		d1vz2 = "%0.2f" %(d1.round(2) - ("%0.2f" % d1).to_f);
-
-		# example : d2 = 0.59 then d2vz1 = 0.5 and d2vz2 = 0.09
-		d2vz1 = ("%0.1f" % d2).to_s;
-		d2vz2 = "%0.2f" %(d2.round(2) - ("%0.2f" % d2).to_f);
-
-		# find the value of N(d1) and N(d2) based on cumulative normal distribution using z-index table
-		nd1 = findCND(d1vz1, d1vz2);
-		nd2 = findCND(d2vz1, d2vz2);
-
-		# Calculate c = current equilibrium value of the call option.
-		call_price = (stockprice * nd1) - ( strikeprice / Math.exp(interestrate * timetomaturity) ) * nd2;
-
-		return call_price;
-	end
-
-
-	# Take call price and other parameter for calculate put price
-	def self.calculatePutPrice(put_price_params)
-		call_price = params[:call_price].to_f;
-		stockprice = params[:stockprice].to_f;
-		strikeprice = params[:strikeprice].to_f;
-		timetomaturity = params[:timetomaturity] / 252.0;
-		interestrate = params[:interest] / 100.0;
-
-		put_price = call_price + (strikeprice / (Math.exp( interestrate * interestrate)) ) - stockprice;
-
-		return put_price;
-	end
-
-	# find N(d1) and N(d2) based on cumulative normal distribution using z-index table
+	# find CND on the bases of d1 and d2 values.
 	def self.findCND(dValue1, dValue2)
 		# find z-index table for find the Nd1 and Nd2
-		ztable = Hash[
+		@ztable = Hash[
 		    '-3.4' => Hash[
 		        '0.00' => 0.0003,
 		        '0.01' => 0.0003,
@@ -892,7 +847,92 @@ class Apexftdatum < ApplicationRecord
 		        '0.09' => 0.9998
 		    ]    
 		];
-
-		return ztable[dValue1][dValue2];
+		puts "dValue_1 : #{dValue1}";
+		puts "dValue_2 : #{dValue2}";
+		return @ztable[dValue1][dValue2];  
 	end
+
+	# calculate put price on the bases of call price and give parameters.
+	def self.calculatePutPrice(cp, stprice, strprice, tm, irate)
+		# call_price = params[:call_price].to_f;
+		# stockprice = params[:stockprice].to_f;
+		# strikeprice = params[:strikeprice].to_f;
+		# timetomaturity = params[:timetomaturity] / 252.0;
+		# interestrate = params[:interest] / 100.0;
+
+        call_price = cp.to_f;
+        stockprice = stprice.to_f;
+        strikeprice = strprice.to_f;
+        timetomaturity = tm.to_f / 252.0;
+        interestrate = irate.to_f / 100.0;
+
+		put_price = call_price + (strikeprice / (Math.exp( interestrate * interestrate)) ) - stockprice;
+
+		return put_price;   
+	end
+
+
+	# calculate call price on the bases of parameters passed.
+	def self.calculateCallPrice(call_price_params) #sprice, strprice, tmaturity, irate, v)
+	    # stockprice = params[:stockprice].to_f;
+	    # strikeprice = params[:strikeprice].to_f;
+	    # timetomaturity = params[:timetomaturity] / 252.0;
+	    # interestrate = params[:interest] / 100.0;
+	    # volatility = params[:volatility] / 100.0;
+
+		stockprice = call_price_params[:stockprice].to_f; #sprice.to_f;
+        strikeprice = call_price_params[:strikeprice].to_f; #strprice.to_f;
+        timetomaturity = call_price_params[:timetomaturity].to_f / 252.0; #tmaturity.to_f / 252.0;
+        interestrate = call_price_params[:interest].to_f / 100.0; #irate.to_f / 100.0;
+        volatility = call_price_params[:volatility].to_f / 100.0; #v.to_f / 100.0;
+
+        puts " stockprice : #{stockprice}";
+        puts " strikeprice : #{strikeprice}";
+        puts " timetomaturity : #{timetomaturity}";
+        puts " interestrate : #{interestrate}";
+        puts " volatility : #{volatility}";
+
+	    # calculate d1 and d2.
+	    d1 = ( Math::log(stockprice / strikeprice) + (interestrate + (volatility ** 2) / 2.0) * timetomaturity) / (volatility * Math.sqrt(timetomaturity));
+	    d2 = d1 - (volatility * Math.sqrt(timetomaturity));
+
+	    puts "D1 : #{d1}  D2 : #{d2}";
+	    # take value from d1 and d2 based on z-index table
+	    # example : d1 = 1.23 then d1vz1 = 1.2 and d1vz2 = 0.03
+	    d1 = d1.round(2);
+		if(d1 > -0.00)
+			dv1 = d1.to_s;
+			d1vz1 = (dv1[0] + dv1[1] + dv1[2]);
+			d1vz2 = '0.0' + dv1[3];
+		else
+			dv1 = d1.to_s;
+			d1vz1 = (dv1[0] + dv1[1] + dv1[2] + dv1[3]);
+			d1vz2 = '0.0' + dv1[4];          
+		end
+	  
+	    # example : d2 = 0.59 then d2vz1 = 0.5 and d2vz2 = 0.09
+	    d2 = d2.round(2);
+		if(d2 > -0.00)
+			dv2 = d2.to_s;
+			d2vz1 = (dv2[0] + dv2[1] + dv2[2]);
+			d2vz2 = '0.0' + dv2[3];
+		else
+			dv2 = d2.to_s;
+			d2vz1 = (dv2[0] + dv2[1] + dv2[2] + dv2[3]);
+			d2vz2 = '0.0' + dv2[4];          
+		end
+
+		puts "d1vz1 : #{d1vz1}  d1vz2 : #{d1vz2}";
+		puts "d2vz1 : #{d2vz1} d2vz2 : #{d2vz2}";
+
+	    # find the value of N(d1) and N(d2) based on cumulative normal distribution using z-index table
+	    nd1 = (findCND(d1vz1, d1vz2)).to_f;
+	    nd2 = (findCND(d2vz1, d2vz2)).to_f;
+
+	    # Calculate c = current equilibrium value of the call option.
+	    call_price = (stockprice * nd1) - ( strikeprice / Math.exp(interestrate * timetomaturity) ) * nd2;
+
+	    return call_price;    
+	end
+
 end

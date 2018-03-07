@@ -24,7 +24,15 @@ class ApexftdataController < ApplicationController
   # POST /apexftdata
   # POST /apexftdata.json
   def create
-    @apexftdatum = Apexftdatum.new(apexftdatum_params)
+    @callPrice = Apexftdatum.calculateCallPrice(params); #[:stockprice], params[:strikeprice], params[:timetomaturity], params[:interest], params[:volatility]);
+
+    @putPrice = Apexftdatum.calculatePutPrice(@callPrice, params[:stockprice], params[:strikeprice], params[:timetomaturity], params[:interest]);
+
+    puts "Call Price : #{@callPrice}";
+
+    puts "Put Price : #{@putPrice}";
+
+    @apexftdatum = Apexftdatum.new(apexftdatum_params);
 
     respond_to do |format|
       if @apexftdatum.save
