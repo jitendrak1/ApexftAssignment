@@ -6,6 +6,8 @@ class CreateApexftdata < ActiveRecord::Migration[5.1]
       t.decimal :timetomaturity
       t.decimal :interest
       t.decimal :volatility
+      t.decimal :callprice
+      t.decimal :putprice
 
       t.timestamps
     end

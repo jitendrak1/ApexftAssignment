@@ -24,19 +24,21 @@ class ApexftdataController < ApplicationController
   # POST /apexftdata
   # POST /apexftdata.json
   def create
-    @cPrice = calCallPrice();
-    puts "Call Price : #{@cPrice}"
-
-    #@pPrice = calPutPrice(@cPrice);
-
-    #puts "Put Price : #{@pPrice}"
-
     @apexftdatum = Apexftdatum.new(apexftdatum_params);
 
     respond_to do |format|
       if @apexftdatum.save
-        format.html { redirect_to @apexftdatum, notice: 'Apexftdatum was successfully created.' }
-        format.json { render :show, status: :created, location: @apexftdatum }
+        @cPrice = calCallPrice();
+        # puts "Call Price : #{@cPrice}"
+
+        @pPrice = calPutPrice(@cPrice);
+        # puts "Put Price : #{@pPrice}"
+
+        # save call price and put price into database
+        @apexftdatum.update_attribute(:callprice, @cPrice) 
+        @apexftdatum.update_attribute(:putprice, @pPrice)
+        format.html { redirect_to apexftdata_path, notice: 'Apexftdatum was successfully created.' }
+        format.json { render :index, status: :created, location: @apexftdatum }
       else
         format.html { render :new }
         format.json { render json: @apexftdatum.errors, status: :unprocessable_entity }
@@ -49,8 +51,18 @@ class ApexftdataController < ApplicationController
   def update
     respond_to do |format|
       if @apexftdatum.update(apexftdatum_params)
-        format.html { redirect_to @apexftdatum, notice: 'Apexftdatum was successfully updated.' }
-        format.json { render :show, status: :ok, location: @apexftdatum }
+        @cPrice = calCallPrice();
+        #puts "Call Price : #{@cPrice}"
+
+        @pPrice = calPutPrice(@cPrice);
+        #puts "Put Price : #{@pPrice}"
+
+        # save call price and put price into database
+        @apexftdatum.update_attribute(:callprice, @cPrice) 
+        @apexftdatum.update_attribute(:putprice, @pPrice)
+
+        format.html { redirect_to apexftdata_path, notice: 'Apexftdatum was successfully updated.' }
+        format.json { render :index, status: :ok, location: @apexftdatum }
       else
         format.html { render :edit }
         format.json { render json: @apexftdatum.errors, status: :unprocessable_entity }
@@ -76,16 +88,16 @@ class ApexftdataController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def apexftdatum_params
-      params.require(:apexftdatum).permit(:stockprice, :strikeprice, :timetomaturity, :interest, :volatility)
+      params.require(:apexftdatum).permit(:callprice, :putprice, :stockprice, :strikeprice, :timetomaturity, :interest, :volatility)
     end
 
     # calculateCallPrice 
     def calCallPrice()
-      @callPrice = Apexftdatum.calculateCallPrice(params.require(:apexftdatum).permit(:stockprice, :strikeprice, :timetomaturity, :interest, :volatility));
+      @callPrice = Apexftdatum.calculateCallPrice(apexftdatum_params);
     end
 
     # calPutPrice 
     def calPutPrice(cPrice)
-      #@putPrice = Apexftdatum.calculatePutPrice(params.require(:apexftdatum).permit(:callprice => cPrice, :stockprice, :strikeprice, :timetomaturity, :interest));
+      @putPrice = Apexftdatum.calculatePutPrice(cPrice, apexftdatum_params);
     end
 end

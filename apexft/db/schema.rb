@@ -18,6 +18,8 @@ ActiveRecord::Schema.define(version: 20180305185158) do
     t.decimal "timetomaturity", precision: 10
     t.decimal "interest", precision: 10
     t.decimal "volatility", precision: 10
+    t.decimal "callprice", precision: 10
+    t.decimal "putprice", precision: 10
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
