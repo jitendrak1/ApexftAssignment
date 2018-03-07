@@ -847,24 +847,24 @@ class Apexftdatum < ApplicationRecord
 		        '0.09' => 0.9998
 		    ]    
 		];
-		puts "dValue_1 : #{dValue1}";
-		puts "dValue_2 : #{dValue2}";
+		#puts "dValue_1 : #{dValue1}";
+		#puts "dValue_2 : #{dValue2}";
 		return @ztable[dValue1][dValue2];  
 	end
 
 	# calculate put price on the bases of call price and give parameters.
-	def self.calculatePutPrice(cp, stprice, strprice, tm, irate)
+	def self.calculatePutPrice(put_price_params) #cp, stprice, strprice, tm, irate)
 		# call_price = params[:call_price].to_f;
 		# stockprice = params[:stockprice].to_f;
 		# strikeprice = params[:strikeprice].to_f;
 		# timetomaturity = params[:timetomaturity] / 252.0;
 		# interestrate = params[:interest] / 100.0;
 
-        call_price = cp.to_f;
-        stockprice = stprice.to_f;
-        strikeprice = strprice.to_f;
-        timetomaturity = tm.to_f / 252.0;
-        interestrate = irate.to_f / 100.0;
+        call_price = put_price_params['callprice'].to_f; #cp.to_f;
+        stockprice = put_price_params['stockprice'].to_f; #stprice.to_f;
+        strikeprice = put_price_params['strikeprice'].to_f; #strprice.to_f;
+        timetomaturity = put_price_params['timetomaturity'].to_f / 252.0; # tm.to_f / 252.0;
+        interestrate = put_price_params['interest'].to_f / 100.0; # irate.to_f / 100.0;
 
 		put_price = call_price + (strikeprice / (Math.exp( interestrate * interestrate)) ) - stockprice;
 
@@ -886,17 +886,17 @@ class Apexftdatum < ApplicationRecord
         interestrate = call_price_params[:interest].to_f / 100.0; #irate.to_f / 100.0;
         volatility = call_price_params[:volatility].to_f / 100.0; #v.to_f / 100.0;
 
-        puts " stockprice : #{stockprice}";
-        puts " strikeprice : #{strikeprice}";
-        puts " timetomaturity : #{timetomaturity}";
-        puts " interestrate : #{interestrate}";
-        puts " volatility : #{volatility}";
+        # puts " stockprice : #{stockprice}";
+        # puts " strikeprice : #{strikeprice}";
+        # puts " timetomaturity : #{timetomaturity}";
+        # puts " interestrate : #{interestrate}";
+        # puts " volatility : #{volatility}";
 
 	    # calculate d1 and d2.
 	    d1 = ( Math::log(stockprice / strikeprice) + (interestrate + (volatility ** 2) / 2.0) * timetomaturity) / (volatility * Math.sqrt(timetomaturity));
 	    d2 = d1 - (volatility * Math.sqrt(timetomaturity));
 
-	    puts "D1 : #{d1}  D2 : #{d2}";
+	    #puts "D1 : #{d1}  D2 : #{d2}";
 	    # take value from d1 and d2 based on z-index table
 	    # example : d1 = 1.23 then d1vz1 = 1.2 and d1vz2 = 0.03
 	    d1 = d1.round(2);
@@ -922,8 +922,8 @@ class Apexftdatum < ApplicationRecord
 			d2vz2 = '0.0' + dv2[4];          
 		end
 
-		puts "d1vz1 : #{d1vz1}  d1vz2 : #{d1vz2}";
-		puts "d2vz1 : #{d2vz1} d2vz2 : #{d2vz2}";
+		#puts "d1vz1 : #{d1vz1}  d1vz2 : #{d1vz2}";
+		#puts "d2vz1 : #{d2vz1} d2vz2 : #{d2vz2}";
 
 	    # find the value of N(d1) and N(d2) based on cumulative normal distribution using z-index table
 	    nd1 = (findCND(d1vz1, d1vz2)).to_f;
